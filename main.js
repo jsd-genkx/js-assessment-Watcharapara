@@ -24,54 +24,77 @@ class Field {
 
 	// Print field //
 	print() {
-		this.field.forEach(row => console.log (row.join('')));
-
-		console.log(this.field);
+		clear();
+		this.field.forEach (row => console.log (row.join('')));
+		
+		// console.log(this.field);
 	}
 
 	// move direction เงื่อนไขการเดินของผู้เล่น โดยการกำหนดการเคลื่อนที่ ซ้าย ขวา บน ล่าง และเงื่อนไขการเดินตกหลุม แล้ว Gameover 
 	move(direction){
-	let newX = this.playerX;
-	let newY = this.playerY;
-	if (direction === "up") newY-- ;
-	else if (direction === "down")newY++ ;
-	else if (direction === "left")newX-- ;
-	else if (direction === "right")newX++ ;
+
+	if (direction === "u") this.positionRow-- ;
+	else if (direction === "d")this.positionRow++ ;
+	else if (direction === "l")this.positionCol-- ;
+	else if (direction === "r")this.positionCol++ ;
+	else console.log ("❌ not direction please use 'u', 'd', 'l', หรือ 'r'");
 	
-	//เงื่อนไข
+
+	// เงื่อนไข check ว่าให้อยู่ใน field
 	if (
-		newY < 0 || newY > this.field.length ||
-		newX < 0 || newX > this.field.[0].length
-	){
+		this.positionRow < 0 || this.positionRow > this.field.length-1 ||
+		this.positionCol < 0 || this.positionCol > this.field[0].length-1
+	) {
 		console.log("Outside field / Game over");
 		this.gameOver = true;
-		return;
+		return this.gameOver;
 	}
 
-	const walk = this.field[this.newX][this.newY];
-	if (walk === "0") {
-		console.log("Game over");
+	const walk = this.field[this.positionRow][this.positionCol];
+
+	if (walk === hole) {
+		console.log("💀 You fell into a hole! Game over");
 		this.gameOver = true;
-	} else if(walk=== "^" ) {
-		console.log("Win");
+		return this.gameOver;
+	} else if(walk=== hat ) {
+		console.log("🎉 You found the hat! You win!");
 		this.gameOver=true;
 	} else {
-		this.playerX = newX;
-		this.playerY = newY;
-		this.field[this.newX][this.newY] = "*";
-		this.print();
+		this.field[this.positionRow][this.positionCol] = "*";
+		// this.print();
 
 	}
 	}
+	 
 }
+
+
+
+
+
+
+
 
 
 
 // Game Mode ON
 // Remark: Code example below should be deleted and use your own code.
+
 const newGame = new Field([
 	["░", "░", "O"],
 	["░", "O", "░"],
 	["░", "^", "░"],
 ]);
-newGame.print();
+
+let gameOver = false;
+
+
+while (!gameOver) {
+	newGame.print();
+
+const way = prompt("Which way?(r, l, u, d):");
+gameOver = newGame.move(way); }
+
+
+
+
